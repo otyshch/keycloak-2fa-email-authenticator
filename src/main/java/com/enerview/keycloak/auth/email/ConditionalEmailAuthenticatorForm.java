@@ -1,21 +1,21 @@
-package com.mesutpiskin.keycloak.auth.email;
+package com.enerview.keycloak.auth.email;
 
-import static com.mesutpiskin.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.ABSTAIN;
-import static com.mesutpiskin.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.SHOW_OTP;
-import static com.mesutpiskin.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.SKIP_OTP;
+import static com.enerview.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.ABSTAIN;
+import static com.enerview.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.SHOW_OTP;
+import static com.enerview.keycloak.auth.email.ConditionalEmailAuthenticatorForm.OtpDecision.SKIP_OTP;
 import static org.keycloak.models.utils.KeycloakModelUtils.getRoleFromString;
 
+import jakarta.ws.rs.core.MultivaluedMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.keycloak.authentication.AuthenticationFlowContext;
+import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
-
-import jakarta.ws.rs.core.MultivaluedMap;
 
 public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
 
@@ -23,36 +23,68 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
 
     public static final String FORCE = "force";
 
-    public static final String OTP_CONTROL_USER_ATTRIBUTE = "otpControlAttribute";
+    public static final String OTP_CONTROL_USER_ATTRIBUTE =
+        "otpControlAttribute";
 
     public static final String SKIP_OTP_ROLE = "skipOtpRole";
 
     public static final String FORCE_OTP_ROLE = "forceOtpRole";
 
-    public static final String SKIP_OTP_FOR_HTTP_HEADER = "noOtpRequiredForHeaderPattern";
+    public static final String SKIP_OTP_FOR_HTTP_HEADER =
+        "noOtpRequiredForHeaderPattern";
 
-    public static final String FORCE_OTP_FOR_HTTP_HEADER = "forceOtpForHeaderPattern";
+    public static final String FORCE_OTP_FOR_HTTP_HEADER =
+        "forceOtpForHeaderPattern";
 
     public static final String DEFAULT_OTP_OUTCOME = "defaultOtpOutcome";
 
     enum OtpDecision {
-        SKIP_OTP, SHOW_OTP, ABSTAIN
+        SKIP_OTP,
+        SHOW_OTP,
+        ABSTAIN,
     }
-	
-	@Override
+
+    @Override
     public void authenticate(AuthenticationFlowContext context) {
+        // Map<String, String> config = context
+        //     .getAuthenticatorConfig()
+        //     .getConfig();
 
-        Map<String, String> config = context.getAuthenticatorConfig().getConfig();
+        AuthenticatorConfigModel model = context.getAuthenticatorConfig();
+        Map<String, String> config = model != null
+            ? model.getConfig()
+            : Collections.emptyMap();
 
-        if (tryConcludeBasedOn(voteForUserOtpControlAttribute(context.getUser(), config), context)) {
+        if (
+            tryConcludeBasedOn(
+                voteForUserOtpControlAttribute(context.getUser(), config),
+                context
+            )
+        ) {
             return;
         }
 
-        if (tryConcludeBasedOn(voteForUserRole(context.getRealm(), context.getUser(), config), context)) {
+        if (
+            tryConcludeBasedOn(
+                voteForUserRole(context.getRealm(), context.getUser(), config),
+                context
+            )
+        ) {
             return;
         }
 
-        if (tryConcludeBasedOn(voteForHttpHeaderMatchesPattern(context.getHttpRequest().getHttpHeaders().getRequestHeaders(), config), context)) {
+        if (
+            tryConcludeBasedOn(
+                voteForHttpHeaderMatchesPattern(
+                    context
+                        .getHttpRequest()
+                        .getHttpHeaders()
+                        .getRequestHeaders(),
+                    config
+                ),
+                context
+            )
+        ) {
             return;
         }
 
@@ -64,7 +96,6 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
     }
 
     private OtpDecision voteForDefaultFallback(Map<String, String> config) {
-
         if (!config.containsKey(DEFAULT_OTP_OUTCOME)) {
             return ABSTAIN;
         }
@@ -79,18 +110,17 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         }
     }
 
-    private boolean tryConcludeBasedOn(OtpDecision state, AuthenticationFlowContext context) {
-
+    private boolean tryConcludeBasedOn(
+        OtpDecision state,
+        AuthenticationFlowContext context
+    ) {
         switch (state) {
-
             case SHOW_OTP:
                 showOtpForm(context);
                 return true;
-
             case SKIP_OTP:
                 context.success();
                 return true;
-
             default:
                 return false;
         }
@@ -100,8 +130,10 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         super.authenticate(context);
     }
 
-    private OtpDecision voteForUserOtpControlAttribute(UserModel user, Map<String, String> config) {
-
+    private OtpDecision voteForUserOtpControlAttribute(
+        UserModel user,
+        Map<String, String> config
+    ) {
         if (!config.containsKey(OTP_CONTROL_USER_ATTRIBUTE)) {
             return ABSTAIN;
         }
@@ -111,7 +143,9 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
             return ABSTAIN;
         }
 
-        Optional<String> value = user.getAttributeStream(attributeName).findFirst();
+        Optional<String> value = user
+            .getAttributeStream(attributeName)
+            .findFirst();
         if (!value.isPresent()) {
             return ABSTAIN;
         }
@@ -126,26 +160,43 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         }
     }
 
-    private OtpDecision voteForHttpHeaderMatchesPattern(MultivaluedMap<String, String> requestHeaders, Map<String, String> config) {
-
-        if (!config.containsKey(FORCE_OTP_FOR_HTTP_HEADER) && !config.containsKey(SKIP_OTP_FOR_HTTP_HEADER)) {
+    private OtpDecision voteForHttpHeaderMatchesPattern(
+        MultivaluedMap<String, String> requestHeaders,
+        Map<String, String> config
+    ) {
+        if (
+            !config.containsKey(FORCE_OTP_FOR_HTTP_HEADER) &&
+            !config.containsKey(SKIP_OTP_FOR_HTTP_HEADER)
+        ) {
             return ABSTAIN;
         }
 
         //Inverted to allow white-lists, e.g. for specifying trusted remote hosts: X-Forwarded-Host: (1.2.3.4|1.2.3.5)
-        if (containsMatchingRequestHeader(requestHeaders, config.get(SKIP_OTP_FOR_HTTP_HEADER))) {
+        if (
+            containsMatchingRequestHeader(
+                requestHeaders,
+                config.get(SKIP_OTP_FOR_HTTP_HEADER)
+            )
+        ) {
             return SKIP_OTP;
         }
 
-        if (containsMatchingRequestHeader(requestHeaders, config.get(FORCE_OTP_FOR_HTTP_HEADER))) {
+        if (
+            containsMatchingRequestHeader(
+                requestHeaders,
+                config.get(FORCE_OTP_FOR_HTTP_HEADER)
+            )
+        ) {
             return SHOW_OTP;
         }
 
         return ABSTAIN;
     }
 
-    private boolean containsMatchingRequestHeader(MultivaluedMap<String, String> requestHeaders, String headerPattern) {
-
+    private boolean containsMatchingRequestHeader(
+        MultivaluedMap<String, String> requestHeaders,
+        String headerPattern
+    ) {
         if (headerPattern == null) {
             return false;
         }
@@ -154,14 +205,18 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         //TODO how to deal with pattern syntax exceptions?
         // need CASE_INSENSITIVE flag so that we also have matches when the underlying container use a different case than what
         // is usually expected (e.g.: vertx)
-        Pattern pattern = Pattern.compile(headerPattern, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(
+            headerPattern,
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE
+        );
 
-        for (Map.Entry<String, List<String>> entry : requestHeaders.entrySet()) {
-
+        for (Map.Entry<
+            String,
+            List<String>
+        > entry : requestHeaders.entrySet()) {
             String key = entry.getKey();
 
             for (String value : entry.getValue()) {
-
                 String headerEntry = key.trim() + ": " + value.trim();
 
                 if (pattern.matcher(headerEntry).matches()) {
@@ -173,9 +228,15 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         return false;
     }
 
-    private OtpDecision voteForUserRole(RealmModel realm, UserModel user, Map<String, String> config) {
-
-        if (!config.containsKey(SKIP_OTP_ROLE) && !config.containsKey(FORCE_OTP_ROLE)) {
+    private OtpDecision voteForUserRole(
+        RealmModel realm,
+        UserModel user,
+        Map<String, String> config
+    ) {
+        if (
+            !config.containsKey(SKIP_OTP_ROLE) &&
+            !config.containsKey(FORCE_OTP_ROLE)
+        ) {
             return ABSTAIN;
         }
 
@@ -190,8 +251,11 @@ public class ConditionalEmailAuthenticatorForm extends EmailAuthenticatorForm {
         return ABSTAIN;
     }
 
-    private boolean userHasRole(RealmModel realm, UserModel user, String roleName) {
-
+    private boolean userHasRole(
+        RealmModel realm,
+        UserModel user,
+        String roleName
+    ) {
         if (roleName == null) {
             return false;
         }

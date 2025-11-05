@@ -1,0 +1,496 @@
+/*
+ * Email Code Theme CSS - Maximum Compatibility Version
+ * Multiple background methods to ensure it works regardless of deployment scenario
+ * Custom styles for Keycloak 2FA Email Authenticator with theme inheritance
+ */
+
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+/* CSS Variables for easy customization */
+:root {
+    --primary-color: #c0bebe;
+    --background-color: #1a1a1a;
+    --card-background: rgba(255, 255, 255, 0.05);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --text-color: #c0bebe;
+    --font-family: "Roboto", sans-serif;
+    --border-radius: 8px;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Global font and base styling */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family) !important;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* METHOD 1: Multiple CSS background fallbacks */
+html {
+    background:
+        url("../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../../theme-resources/assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../../../theme-resources/assets/enerview_login_dark.svg") no-repeat center center fixed,
+        linear-gradient(135deg, #0d0a09 0%, #213d43 50%, #1a1a1a 100%) !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center center !important;
+    min-height: 100vh !important;
+}
+
+/* METHOD 2: Body level backgrounds */
+body,
+body.kcBodyClass {
+    background:
+        url("../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../../theme-resources/assets/enerview_login_dark.svg") no-repeat center center fixed,
+        linear-gradient(135deg, #0d0a09 0%, #213d43 50%, #1a1a1a 100%) !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center center !important;
+    min-height: 100vh !important;
+}
+
+/* METHOD 3: Login container background */
+.login-pf,
+.login-pf body {
+    background:
+        url("../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        linear-gradient(135deg, #0d0a09 0%, #213d43 50%, #1a1a1a 100%) !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center center !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* METHOD 4: Direct CSS background image as base64 (uncomment if needed) */
+/*
+body.kcBodyClass::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIKCSB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxOTIwIDEwODA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDp1cmwoI1NWR0lEXzEpO30KPC9zdHlsZT4KPGxpbmVhckdyYWRpZW50IGlkPSJTVkdJRF8xIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjQ1MCIgeTE9IjU0MCIgeDI9IjE0NzAiIHkyPSI1NDAiPgoJPHN0b3Agb2Zmc2V0PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjojMEQwQTA5Ii8+Cgk8c3RvcCBvZmZzZXQ9IjEiIHN0eWxlPSJzdG9wLWNvbG9yOiMyMTNENDMiLz4KPC9saW5lYXJHcmFkaWVudD4KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxNDcwLDU0MCA0NTAsNTQwIDQ1MCwwIDE5MjAsMCAxOTIwLDEwODAgNDUwLDEwODAgNDUwLDU0MCAiLz4KPC9zdmc+") no-repeat center center;
+    background-size: cover;
+    z-index: -1;
+}
+*/
+
+/* METHOD 5: Fallback solid color background if all images fail */
+html, body {
+    background-color: #0d0a09 !important;
+}
+
+/* Override any parent theme backgrounds completely */
+.login-pf * {
+    background-color: transparent !important;
+}
+
+/* Header styling */
+#kc-header,
+#kc-header-wrapper {
+    color: var(--text-color);
+    text-align: center;
+    font-family: var(--font-family);
+    margin-bottom: 30px;
+}
+
+#kc-header-wrapper {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 20px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Card styling with glassmorphism effect */
+.card-pf {
+    background: var(--card-background) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow) !important;
+    padding: 40px !important;
+    max-width: 450px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    position: relative;
+}
+
+.card-pf::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: var(--border-radius);
+    pointer-events: none;
+}
+
+/* Form styling */
+.kcFormClass,
+#kc-form-wrapper {
+    background: transparent !important;
+    position: relative;
+    z-index: 1;
+}
+
+.kcFormGroupClass {
+    margin-bottom: 25px;
+}
+
+/* Label styling */
+.kcLabelClass {
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+    font-family: var(--font-family);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Input field styling */
+.kcInputClass,
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100% !important;
+    padding: 14px 16px !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-color) !important;
+    font-family: var(--font-family) !important;
+    font-size: 16px !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.kcInputClass:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(192, 190, 190, 0.2) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.kcInputClass::placeholder {
+    color: rgba(192, 190, 190, 0.6) !important;
+}
+
+/* Email code specific input styling */
+#emailCode {
+    text-align: center !important;
+    font-size: 20px !important;
+    letter-spacing: 3px !important;
+    font-weight: 600 !important;
+    font-family: "Courier New", monospace !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Button styling */
+.kcButtonClass,
+input[type="submit"],
+button {
+    padding: 14px 28px !important;
+    border: none !important;
+    border-radius: var(--border-radius) !important;
+    font-family: var(--font-family) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin: 8px 4px !important;
+    min-width: 120px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.kcButtonPrimaryClass,
+input[name="login"] {
+    background: var(--primary-color) !important;
+    color: #1a1a1a !important;
+    font-weight: 700 !important;
+}
+
+.kcButtonPrimaryClass:hover,
+input[name="login"]:hover {
+    background: rgba(192, 190, 190, 0.9) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(192, 190, 190, 0.3) !important;
+}
+
+.kcButtonDefaultClass,
+input[name="resend"],
+input[name="cancel"] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.kcButtonDefaultClass:hover,
+input[name="resend"]:hover,
+input[name="cancel"]:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Button wrapper */
+.kcFormButtonsWrapperClass,
+#kc-form-buttons > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin-top: 30px !important;
+}
+
+/* Error message styling */
+.kcInputErrorMessageClass,
+.alert-error {
+    color: #ff6b6b !important;
+    font-size: 13px !important;
+    margin-top: 6px !important;
+    padding: 8px 12px !important;
+    background: rgba(255, 107, 107, 0.1) !important;
+    border-left: 3px solid #ff6b6b !important;
+    border-radius: 4px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Success/Info messages */
+.alert {
+    padding: 12px 16px !important;
+    margin-bottom: 20px !important;
+    border-radius: var(--border-radius) !important;
+    border: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.15) !important;
+    border-left: 4px solid #4caf50 !important;
+    color: #4caf50 !important;
+}
+
+.alert-info {
+    background: rgba(33, 150, 243, 0.15) !important;
+    border-left: 4px solid #2196f3 !important;
+    color: #64b5f6 !important;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.15) !important;
+    border-left: 4px solid #ffc107 !important;
+    color: #ffca28 !important;
+}
+
+/* Info wrapper */
+#kc-info-wrapper {
+    background: transparent !important;
+    text-align: center !important;
+    margin-top: 20px !important;
+    color: var(--text-color) !important;
+    font-size: 14px !important;
+}
+
+/* Loading state for buttons */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .card-pf {
+        margin: 20px !important;
+        padding: 30px 20px !important;
+    }
+
+    #kc-header-wrapper {
+        font-size: 20px;
+        padding: 40px 20px 20px 20px;
+    }
+
+    .kcFormButtonsWrapperClass,
+    #kc-form-buttons > div {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .kcButtonClass,
+    input[type="submit"],
+    button {
+        width: 100% !important;
+        margin: 4px 0 !important;
+    }
+
+    #emailCode {
+        font-size: 18px !important;
+        letter-spacing: 2px !important;
+    }
+
+    /* Mobile background optimization */
+    html,
+    body,
+    body.kcBodyClass,
+    .login-pf {
+        background-attachment: scroll !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-pf {
+        padding: 25px 15px !important;
+        margin: 10px !important;
+    }
+
+    .kcInputClass,
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        padding: 12px 14px !important;
+        font-size: 16px !important;
+    }
+
+    .kcButtonClass,
+    input[type="submit"],
+    button {
+        padding: 12px 20px !important;
+        font-size: 13px !important;
+    }
+
+    #emailCode {
+        font-size: 16px !important;
+        letter-spacing: 1px !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #ffffff;
+        --text-color: #ffffff;
+        --border-color: #ffffff;
+        --card-background: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus indicators for accessibility */
+.kcInputClass:focus,
+.kcButtonClass:focus,
+input:focus,
+button:focus {
+    outline: 2px solid var(--primary-color) !important;
+    outline-offset: 2px !important;
+}
+
+/* Additional theme inheritance overrides */
+.theme-keycloak body.kcBodyClass,
+.theme-keycloak-v2 body.kcBodyClass,
+.theme-base body.kcBodyClass {
+    background:
+        url("../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        url("../../assets/enerview_login_dark.svg") no-repeat center center fixed,
+        linear-gradient(135deg, #0d0a09 0%, #213d43 50%, #1a1a1a 100%) !important;
+    background-size: cover !important;
+}
+
+/* Ensure all containers are transparent */
+#kc-container,
+#kc-container-wrapper,
+#kc-content,
+#kc-content-wrapper,
+.kc-login,
+.login-pf-page {
+    background: transparent !important;
+}
+
+/* Print styles */
+@media print {
+    html, body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .card-pf {
+        border: 1px solid black !important;
+        background: white !important;
+    }
+}
+
+/* Debug mode - uncomment to see which background is loading */
+/*
+html::before {
+    content: "Background Method: Multiple Fallbacks Active";
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    z-index: 9999;
+    border-radius: 4px;
+}
+*/

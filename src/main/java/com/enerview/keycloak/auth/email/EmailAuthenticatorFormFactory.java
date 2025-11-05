@@ -1,7 +1,6 @@
-package com.mesutpiskin.keycloak.auth.email;
+package com.enerview.keycloak.auth.email;
 
 import java.util.List;
-
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
@@ -12,10 +11,11 @@ import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
 public class EmailAuthenticatorFormFactory implements AuthenticatorFactory {
-	
+
     public static final String PROVIDER_ID = "email-authenticator";
-	public static final EmailAuthenticatorForm SINGLETON = new EmailAuthenticatorForm();
-	
+    public static final EmailAuthenticatorForm SINGLETON =
+        new EmailAuthenticatorForm();
+
     @Override
     public String getId() {
         return PROVIDER_ID;
@@ -28,7 +28,7 @@ public class EmailAuthenticatorFormFactory implements AuthenticatorFactory {
 
     @Override
     public String getReferenceCategory() {
-    	return OTPCredentialModel.TYPE;
+        return OTPCredentialModel.TYPE;
     }
 
     @Override
@@ -46,8 +46,6 @@ public class EmailAuthenticatorFormFactory implements AuthenticatorFactory {
         return false;
     }
 
-
-
     @Override
     public String getHelpText() {
         return "Email otp authenticator.";
@@ -56,12 +54,21 @@ public class EmailAuthenticatorFormFactory implements AuthenticatorFactory {
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return List.of(
-                new ProviderConfigProperty(EmailConstants.CODE_LENGTH, "Code length",
-                        "The number of digits of the generated code.",
-                        ProviderConfigProperty.STRING_TYPE, String.valueOf(EmailConstants.DEFAULT_LENGTH)),
-                new ProviderConfigProperty(EmailConstants.CODE_TTL, "Time-to-live",
-                        "The time to live in seconds for the code to be valid.", ProviderConfigProperty.STRING_TYPE,
-                        String.valueOf(EmailConstants.DEFAULT_TTL)));
+            new ProviderConfigProperty(
+                EmailConstants.CODE_LENGTH,
+                "Code length",
+                "The number of digits of the generated code.",
+                ProviderConfigProperty.STRING_TYPE,
+                String.valueOf(EmailConstants.DEFAULT_LENGTH)
+            ),
+            new ProviderConfigProperty(
+                EmailConstants.CODE_TTL,
+                "Time-to-live",
+                "The time to live in seconds for the code to be valid.",
+                ProviderConfigProperty.STRING_TYPE,
+                String.valueOf(EmailConstants.DEFAULT_TTL)
+            )
+        );
     }
 
     @Override
