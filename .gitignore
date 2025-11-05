@@ -26,3 +26,9 @@ target/*
 .idea
 .vscode
 /target/
+.settings
+.java*
+.classpath
+.project
+.factorypath
+
