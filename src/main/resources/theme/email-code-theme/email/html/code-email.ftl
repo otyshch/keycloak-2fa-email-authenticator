@@ -1,9 +1,9 @@
 <#import "template.ftl" as layout>
 <@layout.emailLayout>
     <div style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #1b1f3a;">
-        <p style="font-size: 14px;">Hello ${user.firstName!""},</p>
+        <p style="font-size: 16px;">Hello ${user.firstName!""},</p>
 
-        <p style="font-size: 14px;">
+        <p style="font-size: 16px;">
             You requested to sign in or verify your account.  
             Please use the following access code to complete the process:
         </p>
@@ -15,8 +15,8 @@
                 ${code}
             </p>
         </div>
-        <p style="margin: 0 0 14px;">
-            ${msg("emailOtpFooterText")}<br/>
+        <p style="margin: 0 0 16px;">
+            ${msg("emailOtpFooterText")} <br/>
             If you didn’t request this code, you can safely ignore this message.</p>
         <br/>
         <p style="margin: 0;">
